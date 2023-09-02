@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { supabase } from '@/supabase/client';
+import { postsService } from '@/services';
 import { useUserSession } from '@/hooks';
 import type { Comment, Post, ProfileType } from './types';
 
@@ -9,7 +9,7 @@ import { CommentsModal } from '@/components/ui';
 import styles from './home.module.scss';
 
 interface HomeProps {
-  postList: Post[];
+  postList: Post[] | null;
 }
 
 export const Home: React.FC<HomeProps> = ({ postList }) => {
@@ -17,7 +17,7 @@ export const Home: React.FC<HomeProps> = ({ postList }) => {
   const profileType: ProfileType = session?.user.user_metadata.profileType;
 
   const [postContent, setPostContent] = React.useState('');
-  const [posts, setPosts] = React.useState<Post[]>(postList);
+  const [posts, setPosts] = React.useState(postList ?? []);
   const [comments, setComments] = React.useState<Comment[]>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
@@ -30,8 +30,8 @@ export const Home: React.FC<HomeProps> = ({ postList }) => {
   const handleShowCommentsClick = (id: string) => () => {
     setIsModalOpen(true);
 
-    const selectedComments = posts.find((post) => post.id === id)?.comments;
-    setComments(selectedComments!);
+    const selectedComments = posts.find((post) => post.id === id)?.comments!;
+    setComments(selectedComments);
   };
 
   const handleCreatePost: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -42,14 +42,12 @@ export const Home: React.FC<HomeProps> = ({ postList }) => {
       post_content: postContent,
     };
 
-    const { data: post } = await supabase
-      .from('posts')
-      .insert(newPost)
-      .select('*, user:profiles (*), comments (*)')
-      .single();
+    const { post } = await postsService.createPost(newPost as Post);
 
     setPostContent('');
-    setPosts((prev) => [post as Post, ...prev]);
+    setPosts((prev) => {
+      return prev && [post, ...prev];
+    });
   };
 
   return (

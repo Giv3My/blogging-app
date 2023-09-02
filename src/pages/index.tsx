@@ -1,15 +1,14 @@
 import { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
-import { SUPABASE_URL, SUPABASE_KEY } from '@/config';
+import { postsService } from '@/services';
 import type { Post } from '@/screens/home/types';
 
 import { RootLayout } from '@/layouts';
 import { Home } from '@/screens';
 
 interface HomePageProps {
-  posts: Post[];
+  posts: Post[] | null;
 }
 
 const HomePage: NextPage<HomePageProps> & {
@@ -32,19 +31,7 @@ HomePage.getLayout = (page: React.ReactNode) => {
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const supabase = createPagesServerClient(ctx, {
-    supabaseUrl: SUPABASE_URL,
-    supabaseKey: SUPABASE_KEY,
-  });
-
-  const { data: posts } = await supabase
-    .from('posts')
-    .select('*, user:profiles (*), comments (*, user:profiles (*))')
-    .order('created_at', { ascending: false })
-    .order('created_at', {
-      foreignTable: 'comments',
-      ascending: false,
-    });
+  const { posts } = await postsService.getPosts(ctx);
 
   return {
     props: {

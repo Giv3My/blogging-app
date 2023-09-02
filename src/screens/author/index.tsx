@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { supabase } from '@/supabase/client';
+import { commentsService } from '@/services';
 import { useUserSession } from '@/hooks';
 import type { Post, Comment, User, ProfileType } from '../home/types';
 
@@ -10,14 +10,14 @@ import styles from './author.module.scss';
 
 interface AuthorProps {
   author: User;
-  postList: Post[];
+  postList: Post[] | null;
 }
 
 export const Author: React.FC<AuthorProps> = ({ author, postList }) => {
   const session = useUserSession();
   const profileType: ProfileType = session?.user.user_metadata.profileType;
 
-  const [posts, setPosts] = React.useState(postList);
+  const [posts, setPosts] = React.useState(postList ?? []);
   const [comments, setComments] = React.useState<Comment[]>([]);
   const [commentContent, setCommentContent] = React.useState('');
   const [postId, setPostId] = React.useState('');
@@ -40,8 +40,8 @@ export const Author: React.FC<AuthorProps> = ({ author, postList }) => {
   const handleShowCommentsClick = (id: string) => () => {
     setIsModalOpen(true);
 
-    const selectedComments = posts.find((post) => post.id === id)?.comments;
-    setComments(selectedComments!);
+    const selectedComments = posts.find((post) => post.id === id)?.comments!;
+    setComments(selectedComments);
   };
 
   const handleCreateComment: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -53,17 +53,11 @@ export const Author: React.FC<AuthorProps> = ({ author, postList }) => {
       comment_content: commentContent,
     };
 
-    const { data: comment } = await supabase
-      .from('comments')
-      .insert(newComment)
-      .select(`*, post:posts (*), user:profiles (*)`)
-      .single();
+    const { comment } = await commentsService.createComment(newComment as Comment);
 
     setPosts((prev) =>
       prev.map((post) =>
-        post.id === postId
-          ? { ...post, comments: [comment as Comment, ...post.comments] }
-          : post
+        post.id === postId ? { ...post, comments: [comment, ...post.comments] } : post
       )
     );
 

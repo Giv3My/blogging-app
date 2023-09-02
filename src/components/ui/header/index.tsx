@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { supabase } from '@/supabase/client';
+import { authService } from '@/services';
 import { useUserSession } from '@/hooks';
 
 import { Button } from '@mui/material';
@@ -14,7 +14,7 @@ export const Header = () => {
 
   const handleSignOut = async () => {
     if (session) {
-      await supabase.auth.signOut();
+      authService.signOut();
     }
 
     router.replace('/auth');

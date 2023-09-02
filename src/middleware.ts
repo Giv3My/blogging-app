@@ -1,22 +1,15 @@
-import { NextResponse, type NextRequest } from 'next/server';
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { NextResponse, type NextRequest } from 'next/server';
+import { SUPABASE_KEY, SUPABASE_URL } from './config';
 
-import { SUPABASE_URL, SUPABASE_KEY } from './config';
+import { authService } from './services';
 
 export const middleware = async (req: NextRequest) => {
   const res = NextResponse.next();
 
-  const supabase = createMiddlewareClient(
-    { req, res },
-    {
-      supabaseUrl: SUPABASE_URL,
-      supabaseKey: SUPABASE_KEY,
-    }
-  );
-
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await authService.checkAuth({ req, res });
 
   if (user && req.nextUrl.pathname === '/auth') {
     return NextResponse.redirect(new URL('/', req.url));

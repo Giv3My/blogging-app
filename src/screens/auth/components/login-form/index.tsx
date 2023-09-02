@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { supabase } from '@/supabase/client';
+import { authService } from '@/services';
 import { loginSchema } from '@/validation/auth/schema';
 import type { LoginFormValues } from './types';
 
@@ -25,7 +25,7 @@ export const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (values) => {
-    const { error } = await supabase.auth.signInWithPassword(values);
+    const { error } = await authService.signIn(values);
 
     if (error) {
       return handleError();

@@ -1,8 +1,7 @@
 import Head from 'next/head';
 import { GetServerSidePropsContext, NextPage } from 'next';
-import { createPagesServerClient } from '@supabase/auth-helpers-nextjs';
 
-import { SUPABASE_URL, SUPABASE_KEY } from '@/config';
+import { postsService, usersService } from '@/services';
 import type { Post, User } from '@/screens/home/types';
 
 import { RootLayout } from '@/layouts';
@@ -10,7 +9,7 @@ import { Author } from '@/screens';
 
 interface AuthorPagePops {
   author: User;
-  posts: Post[];
+  posts: Post[] | null;
 }
 
 const AuthorPage: NextPage<AuthorPagePops> & {
@@ -35,16 +34,7 @@ AuthorPage.getLayout = (page: React.ReactNode) => {
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const userId = ctx.params?.id;
 
-  const supabase = createPagesServerClient(ctx, {
-    supabaseUrl: SUPABASE_URL,
-    supabaseKey: SUPABASE_KEY,
-  });
-
-  const { data: author } = await supabase
-    .from('profiles')
-    .select()
-    .eq('id', userId)
-    .single();
+  const { author } = await usersService.getUserById(ctx, userId as string);
 
   if (!author) {
     return {
@@ -52,15 +42,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   }
 
-  const { data: posts, error } = await supabase
-    .from('posts')
-    .select('*, user:profiles (*), comments (*, user:profiles (*))')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-    .order('created_at', {
-      foreignTable: 'comments',
-      ascending: false,
-    });
+  const { posts, error } = await postsService.getPostsByUser(ctx, userId as string);
 
   if (error) {
     return {
