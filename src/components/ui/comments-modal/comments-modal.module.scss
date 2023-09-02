@@ -1,0 +1,26 @@
+@import '../../../styles//mixins.scss';
+
+.comments-modal {
+  padding: 5px;
+  width: 60%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 8px;
+  background-color: #fff;
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  .comments {
+    padding: 15px;
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px 0;
+    overflow-y: auto;
+    @include scrollbar;
+  }
+}

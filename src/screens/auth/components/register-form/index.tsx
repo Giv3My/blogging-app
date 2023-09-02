@@ -38,7 +38,7 @@ export const RegisterForm = () => {
   const onSubmit: SubmitHandler<RegisterFormValues> = async (values) => {
     const { profileType, ...credentials } = values;
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       ...credentials,
       options: {
         data: {
@@ -51,7 +51,6 @@ export const RegisterForm = () => {
       return handleError();
     }
 
-    console.log(data);
     router.replace('/');
   };
 

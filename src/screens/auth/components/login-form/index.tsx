@@ -25,13 +25,12 @@ export const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (values) => {
-    const { data, error } = await supabase.auth.signInWithPassword(values);
+    const { error } = await supabase.auth.signInWithPassword(values);
 
     if (error) {
       return handleError();
     }
 
-    console.log(data);
     router.replace('/');
   };
 

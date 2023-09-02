@@ -14,7 +14,9 @@ export const middleware = async (req: NextRequest) => {
     }
   );
 
-  const { data: {user} } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (user && req.nextUrl.pathname === '/auth') {
     return NextResponse.redirect(new URL('/', req.url));
@@ -28,5 +30,5 @@ export const middleware = async (req: NextRequest) => {
 };
 
 export const config = {
-  matcher: ['/', '/auth'],
+  matcher: ['/', '/author/:id*', '/auth'],
 };

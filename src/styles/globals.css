@@ -15,3 +15,15 @@ a {
 button {
   cursor: pointer;
 }
+
+input,
+textarea,
+button {
+  border: none;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: none;
+}

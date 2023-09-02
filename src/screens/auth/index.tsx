@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import React from 'react';
 
 import { Box, Tab, Tabs } from '@mui/material';
@@ -26,15 +25,15 @@ export const Auth = () => {
             value={activeTab}
             onChange={handleChangeTab}
           >
-            <Tab label="Register" />
             <Tab label="Login" />
+            <Tab label="Register" />
           </Tabs>
         </Box>
         <CustomTabPanel value={activeTab} index={0}>
-          <RegisterForm />
+          <LoginForm />
         </CustomTabPanel>
         <CustomTabPanel value={activeTab} index={1}>
-          <LoginForm />
+          <RegisterForm />
         </CustomTabPanel>
       </Box>
     </main>
