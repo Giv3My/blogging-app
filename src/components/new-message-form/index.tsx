@@ -1,4 +1,7 @@
 import React from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+
+import { variants } from './animations';
 
 import { TextareaAutosize } from '@mui/material';
 import { SendIcon } from '@/assets/icons';
@@ -18,26 +21,33 @@ export const NewMessageForm: React.FC<NewMessageFormProps> = ({
   onSubmit,
 }) => {
   return (
-    <form className={styles['new-message-form']} onSubmit={onSubmit}>
-      <div className={styles['input-field']}>
-        <TextareaAutosize
-          placeholder={`Send a ${messageType}`}
-          value={message}
-          onChange={onMessageChange}
-        />
-        <button
-          type="submit"
-          className={styles['send-btn']}
-          style={{
-            backgroundColor: !message ? 'transparent' : '#5087b5',
-          }}
-          disabled={!message}
-        >
-          <span>
-            <SendIcon fill={!message ? '#6b6b6b' : '#fff'} />
-          </span>
-        </button>
-      </div>
-    </form>
+    <AnimatePresence>
+      <motion.form
+        {...variants}
+        transition={{ ease: 'easeIn', duration: 0.2 }}
+        className={styles['new-message-form']}
+        onSubmit={onSubmit}
+      >
+        <div className={styles['input-field']}>
+          <TextareaAutosize
+            placeholder={`Send a ${messageType}`}
+            value={message}
+            onChange={onMessageChange}
+          />
+          <button
+            type="submit"
+            className={styles['send-btn']}
+            style={{
+              backgroundColor: !message ? 'transparent' : '#5087b5',
+            }}
+            disabled={!message}
+          >
+            <span>
+              <SendIcon fill={!message ? '#6b6b6b' : '#fff'} />
+            </span>
+          </button>
+        </div>
+      </motion.form>
+    </AnimatePresence>
   );
 };

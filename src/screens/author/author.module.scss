@@ -15,12 +15,10 @@
       margin-top: 30px;
       padding: 15px;
       width: 70%;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 25px 0;
-      @include scrollbar;
 
       h3 {
         font-size: 24px;

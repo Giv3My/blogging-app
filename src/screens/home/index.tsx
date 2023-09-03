@@ -63,10 +63,7 @@ export const Home: React.FC<HomeProps> = ({ postList }) => {
             />
           )}
 
-          <div
-            className={styles.posts}
-            style={{ maxHeight: profileType === 'author' ? '600px' : 'fit-content' }}
-          >
+          <div className={styles.posts}>
             {posts.length > 0 ? (
               posts.map((post) => (
                 <PostItem

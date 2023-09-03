@@ -78,10 +78,7 @@ export const Author: React.FC<AuthorProps> = ({ author, postList }) => {
               onSubmit={handleCreateComment}
             />
           )}
-          <div
-            className={styles.posts}
-            style={{ maxHeight: profileType === 'commentator' ? '550px' : 'fit-content' }}
-          >
+          <div className={styles.posts}>
             {posts.length > 0 ? (
               posts.map((post) => (
                 <PostItem

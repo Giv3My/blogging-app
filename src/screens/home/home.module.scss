@@ -14,12 +14,10 @@
       margin-top: 20px;
       padding: 15px;
       width: 70%;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 25px 0;
-      @include scrollbar;
 
       .post {
         width: 100%;

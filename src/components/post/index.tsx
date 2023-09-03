@@ -1,7 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import moment from 'moment';
+import { motion } from 'framer-motion';
 
+import { variants } from './animations';
 import type { Post } from '@/screens/home/types';
 
 import { Divider } from '@mui/material';
@@ -21,27 +23,38 @@ export const PostItem: React.FC<PostItemProps> = ({
   profileType,
 }) => {
   return (
-    <div className={styles.post}>
-      <Link href={`/author/${post.user_id}`} shallow={true}>
-        <h4 className={styles.author}>{post.user.email}</h4>
-      </Link>
-      <Divider />
-      <p className={styles.content}>{post.post_content}</p>
-      <div className={styles['post-footer']}>
-        <p className={styles.date}>{moment(new Date(post.created_at)).fromNow()}</p>
-        <div>
-          {post.comments.length > 0 && (
-            <p className={styles['show-comments']} onClick={onShowCommentsClick(post.id)}>
-              Show comments
-            </p>
-          )}
-          {profileType === 'commentator' && (
-            <p className={styles['add-comment']} onClick={onSelectPost?.(post.id)}>
-              Comment
-            </p>
-          )}
+    <>
+      <motion.div
+        className={styles.post}
+        initial="offscreen"
+        whileInView="onscreen"
+        viewport={{ once: true }}
+        variants={variants}
+      >
+        <Link href={`/author/${post.user_id}`} shallow={true}>
+          <h4 className={styles.author}>{post.user.email}</h4>
+        </Link>
+        <Divider />
+        <p className={styles.content}>{post.post_content}</p>
+        <div className={styles['post-footer']}>
+          <p className={styles.date}>{moment(new Date(post.created_at)).fromNow()}</p>
+          <div>
+            {post.comments.length > 0 && (
+              <p
+                className={styles['show-comments']}
+                onClick={onShowCommentsClick(post.id)}
+              >
+                Show comments
+              </p>
+            )}
+            {profileType === 'commentator' && (
+              <p className={styles['add-comment']} onClick={onSelectPost?.(post.id)}>
+                Comment
+              </p>
+            )}
+          </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </>
   );
 };
