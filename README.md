@@ -1,3 +1,14 @@
+## Demo
+
+### Auth page
+![2023-09-03 13-33-08](https://github.com/Giv3My/blogging-app/assets/81647268/f0540c2e-34bf-418e-8dc5-27e31917baf3)
+
+### General feed
+![2023-09-03 13-35-21](https://github.com/Giv3My/blogging-app/assets/81647268/c5ef0d94-fdbc-434c-ad99-cd1aeefefe4e)
+
+### Author's feed
+![2023-09-03 13-35-52](https://github.com/Giv3My/blogging-app/assets/81647268/9c35000c-815e-4e04-8af2-291f5a59eb08)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
