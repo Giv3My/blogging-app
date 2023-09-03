@@ -19,7 +19,9 @@ export const Auth = () => {
           <Tabs
             sx={{
               '& .MuiTabs-flexContainer': {
-                justifyContent: 'center',
+                '& .MuiButtonBase-root': {
+                  flexBasis: '50%',
+                },
               },
             }}
             value={activeTab}

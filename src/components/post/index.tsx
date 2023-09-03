@@ -11,8 +11,8 @@ import styles from './post.module.scss';
 
 interface PostItemProps {
   post: Post;
-  onShowCommentsClick: (id: string) => () => void;
-  onSelectPost?: (id: string) => () => void;
+  onShowCommentsClick: (post: Post) => () => void;
+  onSelectPost?: (post: Post) => () => void;
   profileType?: ProfileType;
 }
 
@@ -23,38 +23,33 @@ export const PostItem: React.FC<PostItemProps> = ({
   profileType,
 }) => {
   return (
-    <>
-      <motion.div
-        className={styles.post}
-        initial="offscreen"
-        whileInView="onscreen"
-        viewport={{ once: true }}
-        variants={variants}
-      >
-        <Link href={`/author/${post.user_id}`} shallow={true}>
-          <h4 className={styles.author}>{post.user.email}</h4>
-        </Link>
-        <Divider />
-        <p className={styles.content}>{post.post_content}</p>
-        <div className={styles['post-footer']}>
-          <p className={styles.date}>{moment(new Date(post.created_at)).fromNow()}</p>
-          <div>
-            {post.comments.length > 0 && (
-              <p
-                className={styles['show-comments']}
-                onClick={onShowCommentsClick(post.id)}
-              >
-                Show comments
-              </p>
-            )}
-            {profileType === 'commentator' && (
-              <p className={styles['add-comment']} onClick={onSelectPost?.(post.id)}>
-                Comment
-              </p>
-            )}
-          </div>
+    <motion.div
+      className={styles.post}
+      initial="offscreen"
+      whileInView="onscreen"
+      viewport={{ once: true }}
+      variants={variants}
+    >
+      <Link href={`/author/${post.user_id}`} shallow={true}>
+        <h4 className={styles.author}>{post.user.email}</h4>
+      </Link>
+      <Divider />
+      <p className={styles.content}>{post.post_content}</p>
+      <div className={styles['post-footer']}>
+        <p className={styles.date}>{moment(new Date(post.created_at)).fromNow()}</p>
+        <div>
+          {post.comments.length > 0 && (
+            <p className={styles['show-comments']} onClick={onShowCommentsClick(post)}>
+              Show comments
+            </p>
+          )}
+          {profileType === 'commentator' && (
+            <p className={styles['add-comment']} onClick={onSelectPost?.(post)}>
+              Comment
+            </p>
+          )}
         </div>
-      </motion.div>
-    </>
+      </div>
+    </motion.div>
   );
 };
