@@ -34,7 +34,7 @@ export const getPosts = async (ctx: GetServerSidePropsContext) => {
     });
 
   return {
-    posts: posts as Post[] | null,
+    posts: (posts as Post[]) ?? [],
     error,
   };
 };
@@ -56,7 +56,7 @@ export const getPostsByUser = async (ctx: GetServerSidePropsContext, userId: str
     });
 
   return {
-    posts: posts as Post[] | null,
+    posts: (posts as Post[]) ?? [],
     error,
   };
 };

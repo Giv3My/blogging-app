@@ -1,6 +1,8 @@
+import React from 'react';
 import Head from 'next/head';
 import { GetServerSidePropsContext, NextPage } from 'next';
 
+import { PostsProvider } from '@/contexts';
 import { postsService, usersService } from '@/services';
 import type { Post, User } from '@/screens/home/types';
 
@@ -9,7 +11,7 @@ import { Author } from '@/screens';
 
 interface AuthorPagePops {
   author: User;
-  posts: Post[] | null;
+  posts: Post[];
 }
 
 const AuthorPage: NextPage<AuthorPagePops> & {
@@ -20,9 +22,9 @@ const AuthorPage: NextPage<AuthorPagePops> & {
       <Head>
         <title>Blogging app / Author</title>
       </Head>
-      <main>
+      <PostsProvider postList={posts}>
         <Author author={author} postList={posts} />
-      </main>
+      </PostsProvider>
     </>
   );
 };

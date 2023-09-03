@@ -10,8 +10,8 @@ import styles from './new-message-form.module.scss';
 interface NewMessageFormProps {
   messageType: 'post' | 'comment';
   message: string;
-  onMessageChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onMessageChange: (value: string) => void;
+  onSubmit: () => void;
 }
 
 export const NewMessageForm: React.FC<NewMessageFormProps> = ({
@@ -20,19 +20,29 @@ export const NewMessageForm: React.FC<NewMessageFormProps> = ({
   onMessageChange,
   onSubmit,
 }) => {
+  const handleMessageChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    onMessageChange(e.target.value);
+  };
+
+  const handleCreatePost: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    onSubmit();
+    onMessageChange('');
+  };
+
   return (
     <AnimatePresence>
       <motion.form
         {...variants}
         transition={{ ease: 'easeIn', duration: 0.2 }}
         className={styles['new-message-form']}
-        onSubmit={onSubmit}
+        onSubmit={handleCreatePost}
       >
         <div className={styles['input-field']}>
           <TextareaAutosize
             placeholder={`Send a ${messageType}`}
             value={message}
-            onChange={onMessageChange}
+            onChange={handleMessageChange}
           />
           <button
             type="submit"

@@ -1,53 +1,37 @@
 import React from 'react';
 
-import { postsService } from '@/services';
-import { useUserSession } from '@/hooks';
-import type { Comment, Post, ProfileType } from './types';
+import { PostsContext } from '@/contexts';
+import { useToggle, useUserSession } from '@/hooks';
+import type { Post, ProfileType } from './types';
 
 import { NewMessageForm, PostItem } from '@/components';
 import { CommentsModal } from '@/components/ui';
 import styles from './home.module.scss';
 
 interface HomeProps {
-  postList: Post[] | null;
+  // posts: Post[];
 }
 
-export const Home: React.FC<HomeProps> = ({ postList }) => {
+export const Home: React.FC<HomeProps> = () => {
   const session = useUserSession();
+  const { posts, createPost, selectedPost, setSelectedPost } =
+    React.useContext(PostsContext);
+  const [isModalOpen, onToggleModal] = useToggle();
+  const [postContent, setPostContent] = React.useState('');
+
   const profileType: ProfileType = session?.user.user_metadata.profileType;
 
-  const [postContent, setPostContent] = React.useState('');
-  const [posts, setPosts] = React.useState(postList ?? []);
-  const [comments, setComments] = React.useState<Comment[]>([]);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-
-  const handlePostChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    setPostContent(e.target.value);
+  const handlePostChange = (value: string) => {
+    setPostContent(value);
   };
 
-  const handleModalClose = () => setIsModalOpen(false);
-
-  const handleShowCommentsClick = (id: string) => () => {
-    setIsModalOpen(true);
-
-    const selectedComments = posts.find((post) => post.id === id)?.comments!;
-    setComments(selectedComments);
+  const handleShowCommentsClick = (post: Post) => () => {
+    onToggleModal();
+    setSelectedPost(post);
   };
 
-  const handleCreatePost: React.FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
-
-    const newPost = {
-      user_id: session?.user.id!,
-      post_content: postContent,
-    };
-
-    const { post } = await postsService.createPost(newPost as Post);
-
-    setPostContent('');
-    setPosts((prev) => {
-      return prev && [post, ...prev];
-    });
+  const onSubmit = () => {
+    createPost(postContent);
   };
 
   return (
@@ -59,7 +43,7 @@ export const Home: React.FC<HomeProps> = ({ postList }) => {
               messageType="post"
               message={postContent}
               onMessageChange={handlePostChange}
-              onSubmit={handleCreatePost}
+              onSubmit={onSubmit}
             />
           )}
 
@@ -80,8 +64,8 @@ export const Home: React.FC<HomeProps> = ({ postList }) => {
       </main>
       <CommentsModal
         isOpen={isModalOpen}
-        handleClose={handleModalClose}
-        comments={comments}
+        handleClose={onToggleModal}
+        comments={selectedPost?.comments ?? []}
       />
     </>
   );
