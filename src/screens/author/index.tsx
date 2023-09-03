@@ -28,6 +28,11 @@ export const Author: React.FC<AuthorProps> = ({ author, postList }) => {
       setPostId('');
     } else {
       setPostId(id);
+
+      scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     }
   };
 

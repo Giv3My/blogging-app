@@ -4,7 +4,7 @@ import moment from 'moment';
 import { motion } from 'framer-motion';
 
 import { variants } from './animations';
-import type { Post } from '@/screens/home/types';
+import type { Post, ProfileType } from '@/screens/home/types';
 
 import { Divider } from '@mui/material';
 import styles from './post.module.scss';
@@ -13,7 +13,7 @@ interface PostItemProps {
   post: Post;
   onShowCommentsClick: (id: string) => () => void;
   onSelectPost?: (id: string) => () => void;
-  profileType?: 'author' | 'commentator';
+  profileType?: ProfileType;
 }
 
 export const PostItem: React.FC<PostItemProps> = ({
