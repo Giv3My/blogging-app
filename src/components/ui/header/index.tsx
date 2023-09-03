@@ -14,7 +14,7 @@ export const Header = () => {
 
   const handleSignOut = async () => {
     if (session) {
-      authService.signOut();
+      await authService.signOut();
     }
 
     router.replace('/auth');
