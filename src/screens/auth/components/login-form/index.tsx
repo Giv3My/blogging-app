@@ -8,11 +8,12 @@ import { loginSchema } from '@/validation/auth/schema';
 import type { LoginFormValues } from './types';
 
 import { Button, TextField } from '@mui/material';
-import { PasswordTextField } from '@/components/ui';
+import { PasswordTextField, Loader } from '@/components/ui';
 import styles from './login-form.module.scss';
 
 export const LoginForm = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const {
     register,
@@ -25,9 +26,13 @@ export const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (values) => {
+    setIsLoading(true);
+
     const { error } = await authService.signIn(values);
 
     if (error) {
+      setIsLoading(false);
+
       return handleError();
     }
 
@@ -62,7 +67,7 @@ export const LoginForm = () => {
         register={register('password')}
       />
       <Button type="submit" variant="contained">
-        Sign In
+        {!isLoading ? 'Sign In' : <Loader />}
       </Button>
     </form>
   );

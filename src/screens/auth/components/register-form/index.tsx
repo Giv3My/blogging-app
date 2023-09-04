@@ -16,11 +16,12 @@ import {
   RadioGroup,
   TextField,
 } from '@mui/material';
-import { PasswordTextField } from '@/components/ui';
+import { PasswordTextField, Loader } from '@/components/ui';
 import styles from './register-form.module.scss';
 
 export const RegisterForm = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const {
     register,
@@ -36,9 +37,13 @@ export const RegisterForm = () => {
   });
 
   const onSubmit: SubmitHandler<RegisterFormValues> = async (values) => {
+    setIsLoading(true);
+
     const { error } = await authService.signUp(values);
 
     if (error) {
+      setIsLoading(false);
+
       return handleError();
     }
 
@@ -88,7 +93,7 @@ export const RegisterForm = () => {
         </RadioGroup>
       </FormControl>
       <Button type="submit" variant="contained">
-        Sign Up
+        {!isLoading ? 'Sign Up' : <Loader />}
       </Button>
     </form>
   );

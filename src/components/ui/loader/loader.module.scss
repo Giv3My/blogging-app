@@ -1,0 +1,12 @@
+@import '~@/styles/animations.scss';
+
+.loader {
+  width: 22px;
+  height: 22px;
+  margin: 0 auto;
+  border: 3px solid rgba(255, 255, 255, 0.63);
+  border-top: 3px solid #fff;
+  border-left: 3px solid #fff;
+  border-radius: 50%;
+  animation: loader-rotate 0.8s linear infinite;
+}
